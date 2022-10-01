@@ -1,0 +1,140 @@
+function openWrapCustom(){
+    if(typeof PWT.requestBids === 'function'){
+        PWT.requestBids(
+            PWT.generateConfForGPT(googletag.pubads().getSlots()),
+            function(adUnitsArray) {
+                PWT.addKeyValuePairsToGPTSlots(adUnitsArray);
+                PWT.ow_BidsReceived = true;
+                initAdserver(false);
+            }
+        );
+    }
+    var FAILSAFE_TIMEOUT = 1000;
+    setTimeout(function() {
+        initAdserver(true);
+    }, FAILSAFE_TIMEOUT);
+}
+
+var PWT = {};
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+var gptRan = false;
+PWT.jsLoaded = function () {
+    loadGpt();
+};
+(function() {
+    var purl = window.location.href;
+    var url = '//ads.pubmatic.com/AdServer/js/pwt/158141/1400';
+    var profileVersionId = '';
+    if (purl.indexOf('pwtv=') > 0) {
+        var regexp = /pwtv=(.*?)(&|$)/g;
+        var matches = regexp.exec(purl);
+        if (matches.length >= 2 && matches[1].length > 0) {
+            profileVersionId = '/' + matches[1];
+        }
+    }
+    var wtads = document.createElement('script');
+    wtads.async = true;
+    wtads.type = 'text/javascript';
+    wtads.src = url + profileVersionId + '/pwt.js';
+    var node = document.getElementsByTagName('script')[0];
+    node.parentNode.insertBefore(wtads, node);
+})();
+    
+var loadGpt = function () {
+// Check the gptRan flag
+    if (!gptRan) {
+        gptRan = true;
+        var gads = document.createElement('script');
+        var useSSL = 'https:' == document.location.protocol;
+        gads.async = true;
+        gads.src = (useSSL ? 'https:' : 'http:') + '//www.googletagservices.com/tag/js/gpt.js';
+        var node = document.getElementsByTagName('script')[0];
+        node.parentNode.insertBefore(gads, node);
+    }
+}
+    
+// Failsafe to call gpt
+setTimeout(loadGpt, 500);
+function initAdserver(forced) {
+    if((forced === true && window.initAdserverFlag !== true) || (PWT.a9_BidsReceived && PWT.ow_BidsReceived)){
+        window.initAdserverFlag = true;
+        PWT.a9_BidsReceived = PWT.ow_BidsReceived = false;
+        googletag.pubads().refresh();
+    }
+}
+    
+!function(a9,a,p,s,t,A,g){if(a[a9])return;function q(c,r){a[a9]._Q.push([c,r])}a[a9]={init:function(){q("i",arguments)},fetchBids:function(){q("f",arguments)},setDisplayBids:function(){},_Q:[]};A=p.createElement(s);A.async=!0;A.src=t;g=p.getElementsByTagName(s)[0];g.parentNode.insertBefore(A,g)}("apstag",window,document,"script","//c.amazon-adsystem.com/aax2/apstag.js");
+    
+apstag.init({
+    pubID: 'a17c03c1-eb0c-4671-8a5d-3cb93c8ca58e',
+    adServer: 'googletag'
+});
+
+window.googletag = window.googletag || { cmd: [] };
+
+        apstag.fetchBids({
+            slots: [
+            {
+                slotID: 'div-gpt-ad-1539088020057-0',
+                sizes: [[970, 90], [728, 90]]
+            },{
+                slotID: 'div-gpt-ad-1539088149759-0',
+                sizes: [[300, 250]]
+            },{
+                slotID: 'div-gpt-ad-1539088204000-0',
+                sizes: [[300, 250]]
+            },{
+                slotID: 'div-gpt-ad-btf-hp-1-desktop',
+                sizes: [[970, 90], [728, 90]]
+            },{
+                slotID: 'div-gpt-ad-btf-hp-2-desktop',
+                sizes: [[970, 90], [728, 90]]
+            },{
+                slotID: 'div-gpt-ad-strip-hp-desktop',
+                sizes: [[1300, 50], [1300, 60], [1300, 70]]
+            }],timeout: 1000 // Make Sure this timeout is less than or equal to OpenWrap TimeOut
+        }, function(bids) {
+            googletag.cmd.push(function(){
+                apstag.setDisplayBids();
+                PWT.a9_BidsReceived = true;
+                initAdserver(false);
+            });
+        });
+
+        googletag.cmd.push(function() {
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_ATF_970x90', [[970, 90], [728, 90]], 'div-gpt-ad-1539088020057-0').addService(googletag.pubads()).setTargeting('category', ['home']);
+
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_BTF_1_300x250', [300, 250], 'div-gpt-ad-1539088149759-0').addService(googletag.pubads()).setTargeting('category', ['home']);
+            
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_BTF_2_300x250', [300, 250], 'div-gpt-ad-1539088204000-0').addService(googletag.pubads()).setTargeting('category', ['home']);
+            
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_BTF_1_970x90', [[970, 90], [728, 90]], 'div-gpt-ad-btf-hp-1-desktop').addService(googletag.pubads()).setTargeting('category', ['home']);
+            
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_BTF_2_970x90', [[970, 90], [728, 90]], 'div-gpt-ad-btf-hp-2-desktop').addService(googletag.pubads()).setTargeting('category', ['home']);
+            
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_OOP_1x1', [1, 1], 'div-gpt-ad-btf-hp-oop-desktop').addService(googletag.pubads()).setTargeting('category', ['home']);
+
+            googletag.defineSlot('/11440465/Thehealthsite_Web/Thehealthsite_HP_Strip', [[1300, 50], [1300, 60], [1300, 70]], 'div-gpt-ad-strip-hp-desktop').addService(googletag.pubads()).setTargeting('category', ['home']);
+
+            googletag.pubads().enableLazyLoad({
+                fetchMarginPercent: 50,
+                renderMarginPercent:50,
+                mobileScaling: 2.0
+            });
+            
+            googletag.pubads().collapseEmptyDivs();
+            googletag.pubads().disableInitialLoad();
+            googletag.enableServices();
+            openWrapCustom();
+            
+        });
+        
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1539088020057-0'); });
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1539088149759-0'); });
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-1539088204000-0'); });
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-btf-hp-1-desktop'); });
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-btf-hp-2-desktop'); });
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-btf-hp-oop-desktop'); });
+        googletag.cmd.push(function() { googletag.display('div-gpt-ad-strip-hp-desktop'); });
+        

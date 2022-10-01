@@ -1,0 +1,5 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+www.thehealthsite.com	TRUE	/	FALSE	1999999999	traffic_medium	Direct
+www.thehealthsite.com	TRUE	/	FALSE	1999999999	traffic_source	http://www.thehealthsite.com/
+
